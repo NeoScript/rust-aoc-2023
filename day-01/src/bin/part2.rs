@@ -6,18 +6,45 @@ fn main() {
 
 fn reformat_line(line: &str) -> String {
     let mut value = line.trim().to_string();
-    value = value
-        .replace("one", "1")
-        .replace("two", "2")
-        .replace("three", "3")
-        .replace("four", "4")
-        .replace("five", "5")
-        .replace("six", "6")
-        .replace("seven", "7")
-        .replace("eight", "8")
-        .replace("nine", "9");
+    // need to use a window instead of basic replace
+    // create two pointers
+    // start & end
+    // while end is not larger than the string length
+    // check if substring from start..end is replaceable
+    // if it is, then replace it
+    // set start to end + 1
+    //  continue till end
+    // return new string
+    let mut start = 0;
+    let mut end = 1;
 
-    value.to_string()
+    while end < value.len() {
+        let len = value.len();
+        let current_word = value[start..=end].to_string();
+        let new_word = current_word
+            .replace("one", "o1e")
+            .replace("two", "t2o")
+            .replace("three", "t3e")
+            .replace("four", "f4r")
+            .replace("five", "f5e")
+            .replace("six", "s6x")
+            .replace("seven", "s7n")
+            .replace("eight", "e8t")
+            .replace("nine", "n9e");
+
+        if current_word != new_word {
+            let pre =&value[..start];
+            let post = &value[(end + 1)..];
+
+            value = format!("{}{}{}", pre, new_word, post);
+            start = start + 1;
+            end = start + 1;
+        } else {
+            end = end + 1;
+        }
+    }
+
+    value
 }
 
 fn process(input: &str) -> String {
@@ -58,19 +85,28 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_reformat_line(){
+    fn test_reformat_line() {
         let input = "one2three";
         let result = reformat_line(input);
 
-        assert_eq!(result, "123".to_string());
+        assert_eq!(result, "o1e2t3e".to_string());
     }
 
     #[test]
-    fn test_reformat_tricky_line(){
+    fn test_reformat_tricky_line() {
         let input = "eightwo1";
         let result = reformat_line(input);
 
-        assert_eq!(result, "8wo1".to_string());
+        assert_eq!(result, "e8t2o1".to_string());
+    }
+
+    #[test]
+    fn test_nonsense_format(){
+        // how tf is this day one
+        let input = "eightwo";
+        let result = reformat_line(input);
+        
+        assert_eq!(result, "e8t2o".to_string());
     }
 
     #[test]

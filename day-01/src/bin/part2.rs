@@ -19,7 +19,6 @@ fn reformat_line(line: &str) -> String {
     let mut end = 1;
 
     while end < value.len() {
-        let len = value.len();
         let current_word = value[start..=end].to_string();
         let new_word = current_word
             .replace("one", "o1e")
@@ -33,7 +32,7 @@ fn reformat_line(line: &str) -> String {
             .replace("nine", "n9e");
 
         if current_word != new_word {
-            let pre =&value[..start];
+            let pre = &value[..start];
             let post = &value[(end + 1)..];
 
             value = format!("{}{}{}", pre, new_word, post);
@@ -101,11 +100,11 @@ mod tests {
     }
 
     #[test]
-    fn test_nonsense_format(){
+    fn test_nonsense_format() {
         // how tf is this day one
         let input = "eightwo";
         let result = reformat_line(input);
-        
+
         assert_eq!(result, "e8t2o".to_string());
     }
 

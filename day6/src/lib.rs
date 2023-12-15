@@ -29,6 +29,23 @@ pub fn parse(data: String) -> Result<Vec<Record>, &'static str> {
     Ok(res)
 }
 
+pub fn count_possibilities(record: &Record) -> i32{
+    // the way we solve is we count how many seconds there are,
+    // then for i in seconds
+    //   calculate: remaining seconds, current speed, potential distance traveled at current speed (delta)
+    //   if: delta is larger than current record distance, count ++
+
+    let mut count = 0;
+    for i in 1..record.time_ms{
+        let remaining_seconds = record.time_ms - i;
+        let potential_distance_traveled = i * remaining_seconds;
+        if potential_distance_traveled > record.distance{
+            count+= 1;
+        }
+    }
+    count
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -39,7 +56,6 @@ mod tests {
         assert_eq!(1, 1);
     }
 
-    // todo: make a test for reading string to record vector
     #[test]
     fn test_parsing(){
         let input = "Time:      7  15   30
@@ -58,4 +74,15 @@ mod tests {
     }
 
     // todo: make a test for calculating possible solutions
+    #[test]
+    fn test_count_possibilities(){
+        let input = Record{ time_ms: 7, distance: 9};
+        assert_eq!(4, count_possibilities(&input));
+
+        let input = Record{ time_ms: 15, distance: 40};
+        assert_eq!(8, count_possibilities(&input));
+
+        let input = Record{ time_ms: 30, distance: 200};
+        assert_eq!(9, count_possibilities(&input));
+    }
 }

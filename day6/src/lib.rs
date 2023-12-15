@@ -1,7 +1,7 @@
 #[derive(PartialEq, Eq, Debug)]
 pub struct Record {
-    time_ms: i32,
-    distance: i32,
+    time_ms: usize,
+    distance: usize,
 }
 
 pub fn parse(data: String) -> Result<Vec<Record>, &'static str> {
@@ -11,13 +11,13 @@ pub fn parse(data: String) -> Result<Vec<Record>, &'static str> {
     }
     let (times, distances) = (lines[0].trim(), lines[1].trim());
 
-    let times: Vec<i32> = times
+    let times: Vec<usize> = times
         .split_whitespace()
         .into_iter()
         .skip(1)
-        .map(|x| x.parse::<i32>().unwrap())
+        .map(|x| x.parse::<usize>().unwrap())
         .collect();
-    let distances: Vec<i32> = distances
+    let distances: Vec<usize> = distances
         .split_whitespace()
         .into_iter()
         .skip(1)
@@ -48,21 +48,21 @@ pub fn parse_part2(input: String) -> Result<Record, &'static str> {
     }
     let (times, distances) = (lines[0].trim(), lines[1].trim());
 
-    let time: i32 = times
+    let time: usize = times
         .split_whitespace()
         .into_iter()
         .skip(1)
         .collect::<Vec<&str>>()
         .concat()
-        .parse::<i32>()
+        .parse::<usize>()
         .unwrap();
-    let distance: i32 = distances
+    let distance: usize = distances
         .split_whitespace()
         .into_iter()
         .skip(1)
         .collect::<Vec<&str>>()
         .concat()
-        .parse::<i32>()
+        .parse::<usize>()
         .unwrap();
 
     Ok(Record {
@@ -71,7 +71,7 @@ pub fn parse_part2(input: String) -> Result<Record, &'static str> {
     })
 }
 
-pub fn count_possibilities(record: &Record) -> i32 {
+pub fn count_possibilities(record: &Record) -> usize {
     // the way we solve is we count how many seconds there are,
     // then for i in seconds
     //   calculate: remaining seconds, current speed, potential distance traveled at current speed (delta)
@@ -122,6 +122,23 @@ mod tests {
                 }
             ]
         )
+    }
+
+    #[test]
+    fn test_parse_part2() {
+        let input = "Time:      7  15   30
+        Distance:  9  40  200"
+            .to_string();
+
+        let result = parse_part2(input).unwrap();
+
+        assert_eq!(
+            result,
+            Record {
+                time_ms: 71530,
+                distance: 940200
+            }
+        );
     }
 
     // todo: make a test for calculating possible solutions
